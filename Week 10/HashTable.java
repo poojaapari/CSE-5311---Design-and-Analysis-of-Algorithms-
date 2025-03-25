@@ -14,13 +14,13 @@ class DoublyLinkedList {
     HashNode head;
 
     public void insertOrUpdate(int k, int v) {
-        HashNode current = head;
-        while (current != null) {
-            if (current.k == k) {
-                current.v = v;
+        HashNode curr = head;
+        while (curr != null) {
+            if (curr.k == k) {
+                curr.v = v;
                 return;
             }
-            current = current.next;
+            curr = curr.next;
         }
 
         HashNode newNode = new HashNode(k, v);
@@ -30,40 +30,40 @@ class DoublyLinkedList {
     }
 
     public boolean delete(int k) {
-        HashNode current = head;
-        while (current != null) {
-            if (current.k == k) {
-                if (current.prev != null) current.prev.next = current.next;
-                else head = current.next;
-                if (current.next != null) current.next.prev = current.prev;
+        HashNode curr = head;
+        while (curr != null) {
+            if (curr.k == k) {
+                if (curr.prev != null) curr.prev.next = curr.next;
+                else head = curr.next;
+                if (curr.next != null) curr.next.prev = curr.prev;
                 return true;
             }
-            current = current.next;
+            curr = curr.next;
         }
         return false;
     }
 
     public Integer get(int k) {
-        HashNode current = head;
-        while (current != null) {
-            if (current.k == k) return current.v;
-            current = current.next;
+        HashNode curr = head;
+        while (curr != null) {
+            if (curr.k == k) return curr.v;
+            curr = curr.next;
         }
         return null;
     }
 
     public void printList() {
-        HashNode current = head;
-        while (current != null) {
-            System.out.print(" -> " + current.k + ":" + current.v);
-            current = current.next;
+        HashNode curr = head;
+        while (curr != null) {
+            System.out.print(" -> " + curr.k + ":" + curr.v);
+            curr = curr.next;
         }
     }
 }
 
 public class HashTable {
     private DoublyLinkedList[] table;
-    private int capacity;
+    private int c;
     private int size;
     private final double A = 0.6180339887; 
     private final double LOAD_FACTOR_UP = 0.75;
@@ -71,17 +71,17 @@ public class HashTable {
     private final int MIN_CAPACITY = 8;
 
     public HashTable(int initialCapacity) {
-        this.capacity = Math.max(initialCapacity, MIN_CAPACITY);
+        this.c = Math.max(initialCapacity, MIN_CAPACITY);
         this.size = 0;
-        this.table = new DoublyLinkedList[capacity];
-        for (int i = 0; i < capacity; i++) {
+        this.table = new DoublyLinkedList[c];
+        for (int i = 0; i < c; i++) {
             table[i] = new DoublyLinkedList();
         }
     }
 
     private int hash(int k) {
         double frac = (k * A) % 1;
-        return (int)(capacity * frac);
+        return (int)(c * frac);
     }
 
     public void insert(int k, int v) {
@@ -90,8 +90,8 @@ public class HashTable {
         if (table[index].get(k) == null) size++;
         table[index].insertOrUpdate(k, v);
 
-        if ((double)size / capacity > LOAD_FACTOR_UP) {
-            resize(capacity * 2);
+        if ((double)size / c > LOAD_FACTOR_UP) {
+            resize(c * 2);
         }
     }
 
@@ -104,8 +104,8 @@ public class HashTable {
         boolean removed = table[index].delete(k);
         if (removed) {
             size--;
-            if (capacity > MIN_CAPACITY && (double)size / capacity < LOAD_FACTOR_DOWN) {
-                resize(capacity / 2);
+            if (c > MIN_CAPACITY && (double)size / c < LOAD_FACTOR_DOWN) {
+                resize(c / 2);
             }
         }
     }
@@ -117,15 +117,15 @@ public class HashTable {
             table[i] = new DoublyLinkedList();
         }
 
-        int oldCapacity = capacity;
-        capacity = newCapacity;
+        int oldCapacity = c;
+        c = newCapacity;
         size = 0;
 
         for (int i = 0; i < oldCapacity; i++) {
-            HashNode current = oldTable[i].head;
-            while (current != null) {
-                insert(current.k, current.v);
-                current = current.next;
+            HashNode curr = oldTable[i].head;
+            while (curr != null) {
+                insert(curr.k, curr.v);
+                curr = curr.next;
             }
         }
 
@@ -134,7 +134,7 @@ public class HashTable {
 
     public void display() {
         System.out.println("\nHash Table:");
-        for (int i = 0; i < capacity; i++) {
+        for (int i = 0; i < c; i++) {
             System.out.print("Index " + i + ":");
             table[i].printList();
             System.out.println();
